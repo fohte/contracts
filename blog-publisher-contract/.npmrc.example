@@ -1,0 +1,5 @@
+# @fohte/blog-publisher-contract is distributed via GitHub Packages.
+# Copy this file to the consumer repository root as `.npmrc` and provide
+# NODE_AUTH_TOKEN: a GitHub token with the `read:packages` scope.
+@fohte:registry=https://npm.pkg.github.com
+//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}

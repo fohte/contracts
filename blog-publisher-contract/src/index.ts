@@ -8,7 +8,7 @@ export const Note = z.object({
   description: z.string().optional(),
   // fohte.net の既存記事と publishedFilename で突合して決まる
   kind: z.enum(['new', 'update']),
-  mtime: z.number(),
+  mtime: z.number().int(),
 })
 export type Note = z.infer<typeof Note>
 
@@ -18,7 +18,6 @@ export const PlanRequest = z.object({
 })
 export type PlanRequest = z.infer<typeof PlanRequest>
 
-/** plan 計算中に検出した警告・エラー 1 件。 */
 export const PlanIssue = z.object({
   docId: z.string(),
   // ErrorCode (errors.md 参照)
@@ -27,7 +26,6 @@ export const PlanIssue = z.object({
 })
 export type PlanIssue = z.infer<typeof PlanIssue>
 
-/** plan が公開対象とする記事 1 件。 */
 export const PlanItem = z.object({
   docId: z.string(),
   kind: z.enum(['added', 'modified', 'skipped']),
@@ -35,7 +33,9 @@ export const PlanItem = z.object({
   publishedFilename: z.string(),
   title: z.string(),
   summary: z.string(),
-  diffStat: z.object({ added: z.number(), removed: z.number() }).optional(),
+  diffStat: z
+    .object({ added: z.number().int(), removed: z.number().int() })
+    .optional(),
   skipReason: z.string().optional(),
 })
 export type PlanItem = z.infer<typeof PlanItem>
@@ -61,15 +61,15 @@ export type Plan = z.infer<typeof Plan>
 export const ApplyResult = z.discriminatedUnion('kind', [
   z.object({
     kind: z.literal('success'),
-    prNumber: z.number(),
-    prUrl: z.string(),
+    prNumber: z.number().int(),
+    prUrl: z.url(),
     branch: z.string(),
   }),
   z.object({ kind: z.literal('planChanged'), newPlan: Plan }),
   z.object({
     kind: z.literal('alreadyApplied'),
-    prNumber: z.number(),
-    prUrl: z.string(),
+    prNumber: z.number().int(),
+    prUrl: z.url(),
   }),
   z.object({
     kind: z.literal('failed'),
@@ -81,13 +81,13 @@ export type ApplyResult = z.infer<typeof ApplyResult>
 
 /** `GET /prs` のレスポンス要素。 */
 export const BlogPrSummary = z.object({
-  number: z.number(),
-  url: z.string(),
+  number: z.number().int(),
+  url: z.url(),
   branch: z.string(),
   state: z.enum(['open', 'closed']),
   title: z.string(),
-  createdAt: z.string(),
-  mergedAt: z.string().optional(),
+  createdAt: z.iso.datetime(),
+  mergedAt: z.iso.datetime().optional(),
 })
 export type BlogPrSummary = z.infer<typeof BlogPrSummary>
 
@@ -95,6 +95,6 @@ export type BlogPrSummary = z.infer<typeof BlogPrSummary>
 export const CiStatus = z.object({
   state: z.enum(['pending', 'success', 'failure']),
   failedChecks: z.array(z.string()),
-  previewUrl: z.string().optional(),
+  previewUrl: z.url().optional(),
 })
 export type CiStatus = z.infer<typeof CiStatus>

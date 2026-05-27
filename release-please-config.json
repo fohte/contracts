@@ -15,13 +15,11 @@
     { "type": "ci", "hidden": true }
   ],
   "packages": {
-
     "blog-publisher-contract": {
       "release-type": "node",
       "bump-minor-pre-major": true,
       "bump-patch-for-minor-pre-major": true,
       "component": "blog-publisher-contract"
     }
-
   }
 }

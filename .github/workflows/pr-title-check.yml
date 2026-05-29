@@ -84,6 +84,16 @@ jobs:
             exit 1
           fi
 
+          # Scope matching assumes each entry is a package name. A glob/path
+          # entry (e.g. `packages/*`) is not a scope; fail loudly rather than
+          # accepting titles release-please cannot map to a package.
+          for s in "${scopes[@]}"; do
+            if [[ "${s}" == *"*"* || "${s}" == *"/"* ]]; then
+              echo "::error::Workspace entry \"${s}\" is a glob/path, not a package name; this check needs flat package-name entries in pnpm-workspace.yaml."
+              exit 1
+            fi
+          done
+
           if [[ ! "${PR_TITLE}" =~ ^([a-z]+)(\(([^()]+)\))?(!)?:\ .+$ ]]; then
             fail "PR title does not follow Conventional Commits format."
           fi

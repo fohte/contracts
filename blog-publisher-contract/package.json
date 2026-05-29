@@ -1,10 +1,37 @@
 {
-  "name": "blog-publisher-contract",
-  "private": true,
+  "name": "@fohte/blog-publisher-contract",
+  "version": "0.1.0",
+  "description": "Internal HTTP API contract (Zod schemas) shared between the blog-publisher service and the slack-bot plugin.",
   "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fohte/contracts.git",
+    "directory": "blog-publisher-contract"
+  },
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/"
+  },
   "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "prepublishOnly": "pnpm run build",
     "test": "conc pnpm:test:type pnpm:test:unit",
     "test:type": "tsc --noEmit",
     "test:unit": "vitest run"
+  },
+  "dependencies": {
+    "zod": "4.4.3"
   }
 }

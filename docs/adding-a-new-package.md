@@ -39,13 +39,13 @@ https://www.npmjs.com/package/@fohte/<package-name>/access
 
 In the **Trusted Publisher** section, click **Add trusted publisher** and enter:
 
-| Field                  | Value                  |
-| ---------------------- | ---------------------- |
-| Publisher              | GitHub Actions         |
-| Organization or user   | `fohte`                |
-| Repository             | `contracts`            |
-| Workflow filename      | `release-please.yml`   |
-| Environment name       | (leave empty)          |
+| Field                | Value                |
+| -------------------- | -------------------- |
+| Publisher            | GitHub Actions       |
+| Organization or user | `fohte`              |
+| Repository           | `contracts`          |
+| Workflow filename    | `release-please.yml` |
+| Environment name     | (leave empty)        |
 
 Save.
 

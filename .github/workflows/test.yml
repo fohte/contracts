@@ -104,6 +104,8 @@ jobs:
         id: changed
         with:
           json: true
+          # Emit valid JSON; the default escapes quotes and breaks jq parsing.
+          escape_json: false
 
       - name: Build package matrix
         id: set-packages

@@ -120,7 +120,7 @@ jobs:
           else
             selected=()
             for dir in "${pkgs[@]}"; do
-              if echo "$CHANGED_FILES" | jq -r '.[]' | grep -q "^${dir}/"; then
+              if echo "$CHANGED_FILES" | jq -e --arg d "${dir}/" 'any(.[]; startswith($d))' >/dev/null; then
                 selected+=("$dir")
               fi
             done

@@ -5,8 +5,16 @@ on:
     branches:
       - release-please--branches--*
 
+# test.yml is skipped on release-please branches (it only updates CHANGELOG and
+# version), so emit dummy successes for the fixed-name required status checks
+# (`test` and the `unit-test` gate) to keep release PRs mergeable.
 jobs:
   test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Skip tests for release-please PR (only updates CHANGELOG and version)"
+
+  unit-test:
     runs-on: ubuntu-latest
     steps:
       - run: echo "Skip tests for release-please PR (only updates CHANGELOG and version)"

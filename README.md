@@ -17,10 +17,11 @@ All packages are published to public npm under the `@fohte` scope.
 The repo is a pnpm workspace. Tool versions are pinned with [mise](https://mise.jdx.dev/).
 
 ```sh
-mise install        # install Node and pnpm
-pnpm install        # install workspace dependencies
-pnpm test           # run tests across all packages
-pnpm format         # run eslint --fix and prettier --write
+scripts/bootstrap              # install mise tools, enable corepack, install lefthook hooks, run pnpm install
+scripts/bootstrap --worktree   # same, but skip lefthook (worktrees share the parent's .git/hooks)
+
+pnpm test                      # run tests across all packages
+pnpm format                    # run eslint --fix and prettier --write
 ```
 
 Commits follow [Conventional Commits](https://www.conventionalcommits.org/). `feat`, `fix`, `perf`, `deps`, and `revert` drive releases; `chore`, `docs`, `style`, `refactor`, `test`, `build`, and `ci` are hidden from changelogs.

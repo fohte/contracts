@@ -7,17 +7,6 @@ plugin derives types with `z.infer` for its typed HTTP client.
 
 ## Installation
 
-The package is published to GitHub Packages under the `@fohte` scope. Copy
-[`.npmrc.example`](./.npmrc.example) to the consumer repository root as `.npmrc`
-and provide `NODE_AUTH_TOKEN` (a GitHub token with the `read:packages` scope):
-
-```
-@fohte:registry=https://npm.pkg.github.com
-//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}
-```
-
-Then install:
-
 ```sh
 pnpm add @fohte/blog-publisher-contract
 ```

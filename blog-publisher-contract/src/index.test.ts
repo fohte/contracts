@@ -90,7 +90,7 @@ describe('Plan', () => {
     ],
     warnings: [],
     errors: [
-      { docId: 'note:abc', code: 'SlugMissing', message: 'slug 未設定' },
+      { docId: 'note:abc', code: 'SlugMissing', message: 'slug is missing' },
     ],
     imagesToUpload: [
       { sourcePath: 'images/x.webp', hash: 'deadbeef', alreadyUploaded: false },

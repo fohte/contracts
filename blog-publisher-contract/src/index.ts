@@ -1,18 +1,18 @@
 import { z } from 'zod'
 
-/** `GET /notes` のレスポンス要素。 */
+/** Response element of `GET /notes`. */
 export const Note = z.object({
   docId: z.string(),
   path: z.string(),
   title: z.string(),
   description: z.string().optional(),
-  // fohte.net の既存記事と publishedFilename で突合して決まる
+  // Determined by matching publishedFilename against existing fohte.net articles.
   kind: z.enum(['new', 'update']),
   mtime: z.number().int(),
 })
 export type Note = z.infer<typeof Note>
 
-/** `POST /plan` / `POST /apply` のリクエストボディ。 */
+/** Request body of `POST /plan` and `POST /apply`. */
 export const PlanRequest = z.object({
   docIds: z.array(z.string()).min(1),
 })
@@ -20,7 +20,7 @@ export type PlanRequest = z.infer<typeof PlanRequest>
 
 export const PlanIssue = z.object({
   docId: z.string(),
-  // ErrorCode (errors.md 参照)
+  // ErrorCode (see errors.md).
   code: z.string(),
   message: z.string(),
 })
@@ -40,9 +40,9 @@ export const PlanItem = z.object({
 })
 export type PlanItem = z.infer<typeof PlanItem>
 
-/** docId 集合から決定的に計算される公開計画。永続化されない value object。 */
+/** Publish plan deterministically computed from a docId set. Not persisted; a value object. */
 export const Plan = z.object({
-  // docId 集合から決定的に導出される ID。GitHub ブランチ名のキーになる
+  // ID deterministically derived from the docId set; used as the GitHub branch name key.
   signature: z.string(),
   items: z.array(PlanItem),
   warnings: z.array(PlanIssue),
@@ -57,7 +57,7 @@ export const Plan = z.object({
 })
 export type Plan = z.infer<typeof Plan>
 
-/** `POST /apply` のレスポンス。`kind` で成功・plan 変化・適用済み・失敗を判別する。 */
+/** Response of `POST /apply`. Discriminated by `kind`: success, plan changed, already applied, or failed. */
 export const ApplyResult = z.discriminatedUnion('kind', [
   z.object({
     kind: z.literal('success'),
@@ -79,7 +79,7 @@ export const ApplyResult = z.discriminatedUnion('kind', [
 ])
 export type ApplyResult = z.infer<typeof ApplyResult>
 
-/** `GET /prs` のレスポンス要素。 */
+/** Response element of `GET /prs`. */
 export const BlogPrSummary = z.object({
   number: z.number().int(),
   url: z.url(),
@@ -91,7 +91,7 @@ export const BlogPrSummary = z.object({
 })
 export type BlogPrSummary = z.infer<typeof BlogPrSummary>
 
-/** `GET /prs/{number}/ci` のレスポンス。check-runs を正規化した CI 状態。 */
+/** Response of `GET /prs/{number}/ci`. CI state normalized from check-runs. */
 export const CiStatus = z.object({
   state: z.enum(['pending', 'success', 'failure']),
   failedChecks: z.array(z.string()),

@@ -5,8 +5,15 @@ on:
     branches:
       - release-please--branches--*
 
+# Emit the fixed-name required status checks (`test` / `unit-test`) on
+# release-please branches, where test.yml does not run.
 jobs:
   test:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Skip tests for release-please PR (only updates CHANGELOG and version)"
+
+  unit-test:
     runs-on: ubuntu-latest
     steps:
       - run: echo "Skip tests for release-please PR (only updates CHANGELOG and version)"

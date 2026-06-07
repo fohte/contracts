@@ -13,9 +13,10 @@ jobs:
 
     steps:
       # PRs are squash-merged, so the PR title becomes the commit message that
-      # release-please reads. release-please (independent mode) decides which
-      # package to bump solely from the scope, so release-bumping types must
-      # name a real workspace package.
+      # release-please reads. In a pnpm workspace, release-please (independent
+      # mode) decides which package to bump solely from the scope, so
+      # release-bumping types must name a real workspace package. Projects
+      # without a pnpm workspace fall back to a plain Conventional Commits check.
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
@@ -38,20 +39,33 @@ jobs:
           # are left unconstrained.
           scope_required_types="feat|fix|perf"
 
-          # Allowed scopes for release-bumping types: the workspace package
-          # names listed under `packages:` in pnpm-workspace.yaml. Reading them
-          # dynamically means a newly added package is accepted automatically.
-          mapfile -t scopes < <(
-            awk '
-              /^packages:[[:space:]]*$/ { in_pkgs = 1; next }
-              in_pkgs && /^[^[:space:]]/ { in_pkgs = 0 }
-              in_pkgs && /^[[:space:]]*-[[:space:]]/ {
-                sub(/^[[:space:]]*-[[:space:]]*/, "")
-                gsub(/^["'\'']|["'\'']$/, "")
-                print
-              }
-            ' pnpm-workspace.yaml
-          )
+          # Workspace package names listed under `packages:` in
+          # pnpm-workspace.yaml. Reading them dynamically means a newly added
+          # package is accepted automatically. An absent file or an empty list
+          # (e.g. a single-package project whose pnpm-workspace.yaml only holds
+          # settings) means this is not a workspace, so scope enforcement is off.
+          scopes=()
+          if [[ -f pnpm-workspace.yaml ]]; then
+            mapfile -t scopes < <(
+              awk '
+                /^packages:[[:space:]]*$/ { in_pkgs = 1; next }
+                in_pkgs && /^[^[:space:]]/ { in_pkgs = 0 }
+                in_pkgs && /^[[:space:]]*-[[:space:]]/ {
+                  sub(/^[[:space:]]*-[[:space:]]*/, "")
+                  sub(/[[:space:]]+#.*$/, "")
+                  sub(/[[:space:]]+$/, "")
+                  gsub(/^["'\'']|["'\'']$/, "")
+                  print
+                }
+              ' pnpm-workspace.yaml
+            )
+          fi
+
+          workspace_mode=false
+          if [[ ${#scopes[@]} -gt 0 ]]; then
+            workspace_mode=true
+          fi
+
           # Only used for display in fail(); scope matching below is exact
           # string comparison so package names are never treated as regexes.
           scopes_pattern=$(
@@ -66,33 +80,38 @@ jobs:
             echo ""
             echo "Expected: <type>[optional scope][optional !]: <description>"
             echo "  Allowed types: ${allowed_types//|/, }"
-            echo "  Types requiring a workspace scope: ${scope_required_types//|/, }"
-            echo "  Valid scopes: ${scopes_pattern//|/, }"
+            if [[ "${workspace_mode}" == true ]]; then
+              echo "  Types requiring a workspace scope: ${scope_required_types//|/, }"
+              echo "  Valid scopes: ${scopes_pattern//|/, }"
+            fi
             echo ""
             echo "Examples:"
-            echo "  feat(${scopes[0]}): add new field"
-            echo "  fix(${scopes[0]}): handle edge case"
+            if [[ "${workspace_mode}" == true ]]; then
+              echo "  feat(${scopes[0]}): add new field"
+              echo "  fix(${scopes[0]}): handle edge case"
+            else
+              echo "  feat: add new feature"
+              echo "  fix(parser): handle edge case"
+            fi
             echo "  chore(deps): bump dependencies"
             echo "  ci: tweak workflow"
             exit 1
           }
 
-          # Guard against a parse failure (missing file, renamed key, or an
-          # inline flow-list `packages: [...]`) silently disabling scope checks.
-          if [[ ${#scopes[@]} -eq 0 ]]; then
-            echo "::error::No workspace packages found in pnpm-workspace.yaml."
-            exit 1
+          # In workspace mode each scope must be a package name. A glob/path
+          # entry (e.g. `packages/*`) cannot be resolved to package names from a
+          # sparse checkout, so disable scope enforcement instead of failing the
+          # PR — a hard failure would block every PR in downstream repos that use
+          # globs once this workflow propagates to them.
+          if [[ "${workspace_mode}" == true ]]; then
+            for s in "${scopes[@]}"; do
+              if [[ "${s}" == *"*"* || "${s}" == *"/"* ]]; then
+                echo "::warning::Workspace entry \"${s}\" is a glob/path; disabling workspace scope enforcement because globs cannot be resolved from a sparse checkout."
+                workspace_mode=false
+                break
+              fi
+            done
           fi
-
-          # Scope matching assumes each entry is a package name. A glob/path
-          # entry (e.g. `packages/*`) is not a scope; fail loudly rather than
-          # accepting titles release-please cannot map to a package.
-          for s in "${scopes[@]}"; do
-            if [[ "${s}" == *"*"* || "${s}" == *"/"* ]]; then
-              echo "::error::Workspace entry \"${s}\" is a glob/path, not a package name; this check needs flat package-name entries in pnpm-workspace.yaml."
-              exit 1
-            fi
-          done
 
           if [[ ! "${PR_TITLE}" =~ ^([a-z]+)(\(([^()]+)\))?(!)?:\ .+$ ]]; then
             fail "PR title does not follow Conventional Commits format."
@@ -105,7 +124,7 @@ jobs:
             fail "Type \"${type}\" is not allowed."
           fi
 
-          if [[ "${type}" =~ ^(${scope_required_types})$ ]]; then
+          if [[ "${workspace_mode}" == true && "${type}" =~ ^(${scope_required_types})$ ]]; then
             if [[ -z "${scope}" ]]; then
               fail "Type \"${type}\" requires a workspace-package scope."
             fi

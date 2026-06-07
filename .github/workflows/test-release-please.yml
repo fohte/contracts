@@ -16,4 +16,8 @@ jobs:
   unit-test:
     runs-on: ubuntu-latest
     steps:
+<<<<<<< before updating
       - run: echo "Skip tests for release-please PR (only updates CHANGELOG and version)"
+=======
+      - run: echo "Skip unit tests for release-please PR (only updates CHANGELOG and version)"
+>>>>>>> after updating

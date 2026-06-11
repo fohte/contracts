@@ -10,7 +10,6 @@ release_type: node
 repo_language: en
 subpackages:
   - name: blog-publisher-contract
-    release_type: node
     type: node
 type: base
 use_release_please: true

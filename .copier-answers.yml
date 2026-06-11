@@ -1,11 +1,17 @@
 # Changes here will be overwritten by Copier
-_commit: v0.8.2
+_commit: v0.8.0
 _src_path: https://github.com/fohte/generic-boilerplate
 auto_merge_release_pr: false
-description: '@fohte''s personal monorepo of shared HTTP API contract packages'
+description: "@fohte's personal monorepo of shared HTTP API contract packages"
 is_public: true
+monorepo_node_workspace: true
 project_name: contracts
 release_type: node
 repo_language: en
+subpackages:
+  - name: blog-publisher-contract
+    release_type: node
+    type: node
 type: base
 use_release_please: true
+use_storybook: false

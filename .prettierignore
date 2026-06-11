@@ -1,8 +1,11 @@
 # Auto-generated files
 CHANGELOG.md
+<<<<<<< before updating
 
 # Lock files
 pnpm-lock.yaml
 
 # Build output
 dist
+=======
+>>>>>>> after updating

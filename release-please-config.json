@@ -15,11 +15,16 @@
     { "type": "ci", "hidden": true }
   ],
   "packages": {
+<<<<<<< before updating
     "blog-publisher-contract": {
+=======
+    ".": {
+>>>>>>> after updating
       "release-type": "node",
       "bump-minor-pre-major": true,
       "bump-patch-for-minor-pre-major": true,
-      "component": "blog-publisher-contract"
+      "include-component-in-tag": false,
+      "component": ""
     }
   }
 }

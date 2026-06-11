@@ -1,3 +1,7 @@
 {
+<<<<<<< before updating
   "blog-publisher-contract": "0.1.0"
+=======
+  ".": "0.1.0"
+>>>>>>> after updating
 }

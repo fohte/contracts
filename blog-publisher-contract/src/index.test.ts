@@ -8,7 +8,7 @@ import {
   Plan,
   PlanItem,
   PlanRequest,
-} from '@/index'
+} from '#index'
 
 describe('Note', () => {
   it('parses a note with required and optional fields', () => {

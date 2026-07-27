@@ -4,7 +4,7 @@ packages:
 allowBuilds:
   # required by vitest's transformer
   esbuild: true
-  # required by @fohte/eslint-config -> eslint-plugin-import-x for "@/*" resolution
+  # required by @fohte/eslint-config -> eslint-plugin-import-x for module resolution
   unrs-resolver: true
 
 # Dodge short-lived supply-chain attacks (e.g. shai-hulud, tinycolor) by

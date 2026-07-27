@@ -1,22 +1,15 @@
 import { config } from '@fohte/eslint-config'
 
 export default config(
+<<<<<<< before updating
   { typescript: { typeChecked: true } },
   { ignores: ['**/dist/'] },
+||||||| last update
+  { typescript: { typeChecked: true } },
+=======
+>>>>>>> after updating
   {
-    rules: {
-      'no-restricted-imports': [
-        'error',
-        {
-          patterns: [
-            {
-              group: ['./*', '../*'],
-              message:
-                'Please use absolute imports instead of relative imports.',
-            },
-          ],
-        },
-      ],
-    },
+    typescript: { typeChecked: true },
+    errorHandling: {},
   },
 )

@@ -32,9 +32,10 @@
     "test:unit": "vitest run"
   },
   "dependencies": {
-    "neverthrow": "8.2.0"
+    "neverthrow": "8.2.0",
+    "zod": "4.4.3"
   },
   "imports": {
-  "#*": "./src/*.ts"
-}
+    "#*": "./src/*.ts"
+  }
 }

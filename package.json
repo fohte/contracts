@@ -4,7 +4,7 @@
   "workspaces": [
     "blog-publisher-contract"
   ],
-  "packageManager": "pnpm@11.16.0",
+  "packageManager": "pnpm@11.17.0",
   "type": "module",
   "scripts": {
     "lint": "eslint .",

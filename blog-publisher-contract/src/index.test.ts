@@ -1,3 +1,4 @@
+import { err, ok } from 'neverthrow'
 import { describe, expect, it } from 'vitest'
 
 import {
@@ -10,6 +11,7 @@ import {
   PlanRequest,
 } from '#index'
 
+<<<<<<< before updating
 describe('Note', () => {
   it('parses a note with required and optional fields', () => {
     const note = {
@@ -21,8 +23,18 @@ describe('Note', () => {
       mtime: 1700000000,
     }
     expect(Note.parse(note)).toEqual(note)
+||||||| last update
+describe('greet', () => {
+  it('should return greeting message', () => {
+    expect(greet('World')).toBe('Hello, World!')
+=======
+describe('greet', () => {
+  it('should return greeting message', () => {
+    expect(greet('World')).toEqual(ok('Hello, World!'))
+>>>>>>> after updating
   })
 
+<<<<<<< before updating
   it('rejects an unknown kind', () => {
     const result = Note.safeParse({
       docId: 'note:abc',
@@ -194,5 +206,12 @@ describe('CiStatus', () => {
       failedChecks: 'build',
     })
     expect(result.success).toBe(false)
+||||||| last update
+  it('should handle empty string', () => {
+    expect(greet('')).toBe('Hello, !')
+=======
+  it('should return an error for empty string', () => {
+    expect(greet('')).toEqual(err(new Error('name must not be empty')))
+>>>>>>> after updating
   })
 })

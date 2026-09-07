@@ -1,0 +1,3 @@
+scope/blog-publisher-contract:
+  - changed-files:
+      - any-glob-to-any-file: blog-publisher-contract/**

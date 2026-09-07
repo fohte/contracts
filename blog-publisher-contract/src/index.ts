@@ -1,5 +1,14 @@
+<<<<<<< before updating
 import { z } from 'zod'
+||||||| last update
+export const greet = (name: string): string => {
+  return `Hello, ${name}!`
+}
+=======
+import { err, ok, type Result } from 'neverthrow'
+>>>>>>> after updating
 
+<<<<<<< before updating
 /** Response element of `GET /notes`. */
 export const Note = z.object({
   docId: z.string(),
@@ -98,3 +107,13 @@ export const CiStatus = z.object({
   previewUrl: z.url().optional(),
 })
 export type CiStatus = z.infer<typeof CiStatus>
+||||||| last update
+export const greet = (name: string): string => {
+  return `Hello, ${name}!`
+}
+=======
+export const greet = (name: string): Result<string, Error> => {
+  if (!name) return err(new Error('name must not be empty'))
+  return ok(`Hello, ${name}!`)
+}
+>>>>>>> after updating
